@@ -2,11 +2,19 @@ package cornelius.weatherapp2;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.InputType;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -14,20 +22,83 @@ import java.text.NumberFormat;
 
 
 public class MainActivity extends ActionBarActivity
+        implements CurrentWeatherFragment.OnFragmentInteractionListener,
+        ForecastFragment.OnFragmentInteractionListener
 {
+    private static final int NUM_PAGES = 7;
+    private ViewPager mPager;
+    private PagerAdapter mPagerAdapter;
+    protected GestureDetectorCompat mDetector;
     static String zipcode = null;
+
+    GestureDetector.OnGestureListener glistener = new GestureDetector.SimpleOnGestureListener()
+    {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            //swapFragments();
+            return super.onFling(e1, e2, velocityX, velocityY);
+        }
+    };
+
+    protected void swapFragments()
+    {
+        android.support.v4.app.FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+        trans.replace(R.id.container, new ForecastFragment());
+        trans.addToBackStack(null);
+        trans.commit();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (mPager.getCurrentItem() == 0) {
+            // If the user is currently looking at the first step, allow the system to handle the
+            // Back button. This calls finish() on this activity and pops the back stack.
+            super.onBackPressed();
+        } else {
+            // Otherwise, select the previous step.
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+        }
+    }
+
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter
+    {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public android.support.v4.app.Fragment getItem(int position) {
+            return ForecastFragment.newInstance("","");
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        //this.mDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_main);
 
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
         // Get latitude and longitude from zip code
         zipcode = "60563";
         // Sends zip code in order to get latitude and longitude
         LocationIO loc = new LocationIO();
         loc.getLocation(zipcode);
-        new LocationIO().getLocation(zipcode);
     }
 
     @Override
@@ -179,5 +250,11 @@ public class MainActivity extends ActionBarActivity
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri)
+    {
+
     }
 }
