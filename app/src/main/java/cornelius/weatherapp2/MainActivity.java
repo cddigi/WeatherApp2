@@ -1,70 +1,21 @@
 package cornelius.weatherapp2;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.InputType;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class MainActivity extends ActionBarActivity
-    implements Day1Fragment.OnFragmentInteractionListener,
-    Day2Fragment.OnFragmentInteractionListener {
-
-    /**
-     * The number of pages (wizard steps) to show in this demo.
-     */
-    private static final int NUM_PAGES = 8;
-
-    /**
-     * The pager widget, which handles animation and allows swiping horizontally to access previous
-     * and next wizard steps.
-     */
-    private ViewPager mPager;
-    /**
-     * The pager adapter, which provides the pages to the view pager widget.
-     */
-    private PagerAdapter mPagerAdapter;
-
-    private String m_Text = "";
-    Map weather = new HashMap<String, String>();
-
-    GestureDetector.OnGestureListener glistener = new GestureDetector.SimpleOnGestureListener(){
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            //swapFragments();
-            return super.onFling(e1, e2, velocityX, velocityY);
-        }
-    };
-    protected GestureDetectorCompat mDetector;
-
-    protected void swapFragments(){
-        android.support.v4.app.FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
-        trans.replace(R.id.container, new Day1Fragment());
-        trans.addToBackStack(null);
-        trans.commit();
-    }
-
+{
+    static String zipcode = null;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -72,54 +23,11 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.fragment_main);
 
         // Get latitude and longitude from zip code
-        String zipcode = "60563";
+        zipcode = "60563";
         // Sends zip code in order to get latitude and longitude
         LocationIO loc = new LocationIO();
         loc.getLocation(zipcode);
         new LocationIO().getLocation(zipcode);
-
-        // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mPager.getCurrentItem() == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed();
-        } else {
-            // Otherwise, select the previous step.
-            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-        }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        //this.mDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
-    }
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
-    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public android.support.v4.app.Fragment getItem(int position) {
-            return position % 2 == 0 ? Day1Fragment.newInstance("","") :
-                    Day2Fragment.newInstance("","");
-        }
-
-        @Override
-        public int getCount() {
-            return NUM_PAGES;
-        }
     }
 
     @Override
@@ -154,12 +62,12 @@ public class MainActivity extends ActionBarActivity
         final TextView visibility = (TextView)findViewById(R.id.textView12);
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(2);
-        temp.setText(nf.format((Double.parseDouble(weather.get("temp").toString())-32)*5/9) + "º C");
-        dew.setText(nf.format((Double.parseDouble(weather.get("dew").toString())-32)*5/9) + "º C");
-        pressure.setText(nf.format(Double.parseDouble(weather.get("pressure").toString())*25.4)  + " mmHg");
-        gust.setText(nf.format(Double.parseDouble(weather.get("gust").toString())*1.6093)  + " kph");
-        wind.setText(weather.get("direction").toString() + " @ " + nf.format(Double.parseDouble(weather.get("wind").toString())*1.6093)  + " kph");
-        visibility.setText(nf.format(Double.parseDouble(weather.get("visibility").toString())*1.6093)  + " km");
+//        temp.setText(nf.format((Double.parseDouble(weather.get("temp").toString())-32)*5/9) + "º C");
+//        dew.setText(nf.format((Double.parseDouble(weather.get("dew").toString())-32)*5/9) + "º C");
+//        pressure.setText(nf.format(Double.parseDouble(weather.get("pressure").toString())*25.4)  + " mmHg");
+//        gust.setText(nf.format(Double.parseDouble(weather.get("gust").toString())*1.6093)  + " kph");
+//        wind.setText(weather.get("direction").toString() + " @ " + nf.format(Double.parseDouble(weather.get("wind").toString())*1.6093)  + " kph");
+//        visibility.setText(nf.format(Double.parseDouble(weather.get("visibility").toString())*1.6093)  + " km");
     }
 
     private void imperial()
@@ -171,12 +79,12 @@ public class MainActivity extends ActionBarActivity
         final TextView wind = (TextView)findViewById(R.id.windspeed);
         final TextView visibility = (TextView)findViewById(R.id.textView12);
 
-        temp.setText(weather.get("temp").toString() + "º F");
-        dew.setText(weather.get("dew").toString() + "º F");
-        pressure.setText(weather.get("pressure").toString()  + " inHg");
-        gust.setText(weather.get("gust").toString()  + " mph");
-        wind.setText(weather.get("direction").toString() + " @ " + weather.get("wind").toString()  + " mph");
-        visibility.setText(weather.get("visibility").toString()  + " mi");
+//        temp.setText(weather.get("temp").toString() + "º F");
+//        dew.setText(weather.get("dew").toString() + "º F");
+//        pressure.setText(weather.get("pressure").toString()  + " inHg");
+//        gust.setText(weather.get("gust").toString()  + " mph");
+//        wind.setText(weather.get("direction").toString() + " @ " + weather.get("wind").toString()  + " mph");
+//        visibility.setText(weather.get("visibility").toString()  + " mi");
     }
 
     private void zipcode() {
@@ -191,7 +99,7 @@ public class MainActivity extends ActionBarActivity
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        m_Text = input.getText().toString();
+                        zipcode = input.getText().toString();
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -271,26 +179,5 @@ public class MainActivity extends ActionBarActivity
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
     }
 }

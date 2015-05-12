@@ -3,27 +3,23 @@ package cornelius.weatherapp2;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import java.util.ArrayList;
-import java.util.List;
-import android.app.Activity;
 import android.app.Fragment;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.TextView;
 
 
-public class Day1Fragment extends android.support.v4.app.Fragment {
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link ForecastFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link ForecastFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class ForecastFragment extends Fragment
+{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -41,11 +37,12 @@ public class Day1Fragment extends android.support.v4.app.Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RedFragment.
+     * @return A new instance of fragment ForecastFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static Day1Fragment newInstance(String param1, String param2) {
-        Day1Fragment fragment = new Day1Fragment();
+    public static ForecastFragment newInstance(String param1, String param2)
+    {
+        ForecastFragment fragment = new ForecastFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -53,14 +50,17 @@ public class Day1Fragment extends android.support.v4.app.Fragment {
         return fragment;
     }
 
-    public Day1Fragment() {
+    public ForecastFragment()
+    {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        if (getArguments() != null)
+        {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
@@ -68,36 +68,39 @@ public class Day1Fragment extends android.support.v4.app.Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        List<Integer> ints = new ArrayList<>();
-        for(int i = 0;i<100;i++){
-            ints.add(i);
-        }
-        Log.i("", "" + ints.size());
-        return inflater.inflate(R.layout.fragment_main, container, false);
+                             Bundle savedInstanceState)
+    {
+        TextView textView = new TextView(getActivity());
+        textView.setText(R.string.hello_blank_fragment);
+        return textView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
+    public void onButtonPressed(Uri uri)
+    {
+        if (mListener != null)
+        {
             mListener.onFragmentInteraction(uri);
         }
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Activity activity)
+    {
         super.onAttach(activity);
-        try {
+        try
+        {
             mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
+        } catch (ClassCastException e)
+        {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
 
     @Override
-    public void onDetach() {
+    public void onDetach()
+    {
         super.onDetach();
         mListener = null;
     }
@@ -112,10 +115,10 @@ public class Day1Fragment extends android.support.v4.app.Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnFragmentInteractionListener
+    {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
 
 }
-
