@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,32 +22,19 @@ import android.widget.TextView;
  */
 public class CurrentWeatherFragment extends android.support.v4.app.Fragment
 {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private OnFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment CurrentWeatherFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CurrentWeatherFragment newInstance(String param1, String param2)
+    public static CurrentWeatherFragment newInstance()
     {
         CurrentWeatherFragment fragment = new CurrentWeatherFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,20 +48,13 @@ public class CurrentWeatherFragment extends android.support.v4.app.Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
-        {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        TextView textView = new TextView(getActivity());
-        textView.setText(R.string.hello_blank_fragment);
-        return textView;
+        return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -121,4 +103,38 @@ public class CurrentWeatherFragment extends android.support.v4.app.Fragment
         public void onFragmentInteraction(Uri uri);
     }
 
+    public void metric()
+    {
+        final TextView temp = (TextView)getActivity().findViewById(R.id.temperature);
+        final TextView dew = (TextView)getActivity().findViewById(R.id.dew);
+        final TextView pressure = (TextView)getActivity().findViewById(R.id.pressure);
+        final TextView gust = (TextView)getActivity().findViewById(R.id.gusts);
+        final TextView wind = (TextView)getActivity().findViewById(R.id.windspeed);
+        final TextView visibility = (TextView)getActivity().findViewById(R.id.textView12);
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setMaximumFractionDigits(2);
+//        temp.setText(nf.format((Double.parseDouble(weather.get("temp").toString())-32)*5/9) + "º C");
+//        dew.setText(nf.format((Double.parseDouble(weather.get("dew").toString())-32)*5/9) + "º C");
+//        pressure.setText(nf.format(Double.parseDouble(weather.get("pressure").toString())*25.4)  + " mmHg");
+//        gust.setText(nf.format(Double.parseDouble(weather.get("gust").toString())*1.6093)  + " kph");
+//        wind.setText(weather.get("direction").toString() + " @ " + nf.format(Double.parseDouble(weather.get("wind").toString())*1.6093)  + " kph");
+//        visibility.setText(nf.format(Double.parseDouble(weather.get("visibility").toString())*1.6093)  + " km");
+    }
+
+    public void imperial()
+    {
+        final TextView temp = (TextView)getActivity().findViewById(R.id.temperature);
+        final TextView dew = (TextView)getActivity().findViewById(R.id.dew);
+        final TextView pressure = (TextView)getActivity().findViewById(R.id.pressure);
+        final TextView gust = (TextView)getActivity().findViewById(R.id.gusts);
+        final TextView wind = (TextView)getActivity().findViewById(R.id.windspeed);
+        final TextView visibility = (TextView)getActivity().findViewById(R.id.textView12);
+
+        temp.setText(LocationIO.weatherInfo.current.temperature + "º F");
+        dew.setText(LocationIO.weatherInfo.current.dewPoint + "º F");
+        pressure.setText(LocationIO.weatherInfo.current.pressure + " inHg");
+        gust.setText(LocationIO.weatherInfo.current.gusts + " mph");
+        wind.setText(LocationIO.weatherInfo.current.windDirectionStr() + " @ " + LocationIO.weatherInfo.current.windSpeed + " mph");
+        visibility.setText(LocationIO.weatherInfo.current.visibility + " mi");
+    }
 }

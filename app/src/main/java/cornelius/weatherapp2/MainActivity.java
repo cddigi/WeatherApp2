@@ -2,6 +2,7 @@ package cornelius.weatherapp2;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -61,6 +62,19 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    public void showMap(Uri geoLocation)
+    {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geoLocation);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    /**
+     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
+     * sequence.
+     */
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter
     {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
@@ -123,40 +137,9 @@ public class MainActivity extends ActionBarActivity
                 .show();
     }
 
-    private void metric()
-    {
-        final TextView temp = (TextView)findViewById(R.id.temperature);
-        final TextView dew = (TextView)findViewById(R.id.dew);
-        final TextView pressure = (TextView)findViewById(R.id.pressure);
-        final TextView gust = (TextView)findViewById(R.id.gusts);
-        final TextView wind = (TextView)findViewById(R.id.windspeed);
-        final TextView visibility = (TextView)findViewById(R.id.textView12);
-        NumberFormat nf = NumberFormat.getInstance();
-        nf.setMaximumFractionDigits(2);
-//        temp.setText(nf.format((Double.parseDouble(weather.get("temp").toString())-32)*5/9) + "º C");
-//        dew.setText(nf.format((Double.parseDouble(weather.get("dew").toString())-32)*5/9) + "º C");
-//        pressure.setText(nf.format(Double.parseDouble(weather.get("pressure").toString())*25.4)  + " mmHg");
-//        gust.setText(nf.format(Double.parseDouble(weather.get("gust").toString())*1.6093)  + " kph");
-//        wind.setText(weather.get("direction").toString() + " @ " + nf.format(Double.parseDouble(weather.get("wind").toString())*1.6093)  + " kph");
-//        visibility.setText(nf.format(Double.parseDouble(weather.get("visibility").toString())*1.6093)  + " km");
-    }
 
-    private void imperial()
-    {
-        final TextView temp = (TextView)findViewById(R.id.temperature);
-        final TextView dew = (TextView)findViewById(R.id.dew);
-        final TextView pressure = (TextView)findViewById(R.id.pressure);
-        final TextView gust = (TextView)findViewById(R.id.gusts);
-        final TextView wind = (TextView)findViewById(R.id.windspeed);
-        final TextView visibility = (TextView)findViewById(R.id.textView12);
 
-//        temp.setText(weather.get("temp").toString() + "º F");
-//        dew.setText(weather.get("dew").toString() + "º F");
-//        pressure.setText(weather.get("pressure").toString()  + " inHg");
-//        gust.setText(weather.get("gust").toString()  + " mph");
-//        wind.setText(weather.get("direction").toString() + " @ " + weather.get("wind").toString()  + " mph");
-//        visibility.setText(weather.get("visibility").toString()  + " mi");
-    }
+
 
     private void zipcode() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -196,20 +179,22 @@ public class MainActivity extends ActionBarActivity
     }
 
     //Allows user to select what units they would like to be displayed
-    private void units(){
+    private void units()
+    {
+        final CurrentWeatherFragment fragment = CurrentWeatherFragment.newInstance();
         new AlertDialog.Builder(this)
                 .setTitle("Units")
                 .setMessage("Choose what units you would like your weather displayed in:")
                 .setPositiveButton("Metric", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int which) {
-                        metric();
+                        fragment.metric();
                     }
                 })
                 .setNegativeButton("Imperial", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int which) {
-                        imperial();
+                        fragment.imperial();
                     }
                 })
                 .show();
